@@ -1,0 +1,75 @@
+<h1>
+
+    Books Search Portal
+</h1>
+
+
+<body>
+    <input id='myInput' onkeyup='searchTable()' type='text'>
+    <table class="table" class="mytable" data-name="mytable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+            </tr>
+        </thead>
+        <tbody id="data">
+
+        </tbody>
+
+    </table>
+
+    <div id="myData"> Please find Book Information below
+    </div>
+    <script>
+        fetch("http://localhost:3000/booksdata", {
+            credentials: 'include'
+        }).then(
+            res => {
+                res.json().then(
+                    data => {
+                        console.log(data);
+
+                        if (data.length > 0) {
+
+                            var temp = " ";
+                            data.forEach((itemData) => {
+                                temp += "<tr>";
+                                temp += "<td>" + itemData.Title + "</td>";
+                                temp += "<td>" + itemData.Author + "</td>";
+                                temp += "<td>" + itemData.ISBN + "</td>";
+                            });
+                            document.getElementById('data').innerHTML = temp;
+                        }
+                    }
+                )
+            }
+        )
+
+
+
+
+
+        //function to search particular data from Book Detials table
+        function searchTable() {
+            var input, filter, table, tr, td, i, alltables;
+            alltables = document.querySelectorAll("table[data-name=mytable]");
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            alltables.forEach(function(table) {
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0 - 3];
+                    if (td) {
+                        if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
